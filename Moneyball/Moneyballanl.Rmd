@@ -1,0 +1,26 @@
+---
+title: "MoneyBall"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(effects)
+library(car)
+library(alr4)
+```
+
+inport data
+```{r}
+setwd("/home/grady/Rproj/Moneyball")
+baseball = read.csv("baseball.csv")
+moneyball = subset(baseball, Year < 2002)
+```
+
+brief look
+```{r}
+str(moneyball)
+pairs(~ Team + League + Year + RS + RA + W + OBP + Playoffs, moneyball )
+pairs(~ SLG + BA  + RankSeason + RankPlayoffs + G + OOBP + OSLG + Playoffs, moneyball)
+
+```
+

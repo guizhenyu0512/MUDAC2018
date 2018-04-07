@@ -1,0 +1,44 @@
+---
+title: "HealthC_An"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(effects)
+library(car)
+library(alr4)
+library(caTools)
+library(ROCR)
+```
+
+```{r}
+quality = read.csv("quality.csv")
+```
+
+//Check the structure of data
+```{r}
+str(quality)
+table(quality$PoorCare)
+set.seed(88)
+split = sample.split(quality$PoorCare, SplitRatio = 0.75)
+quality_train = subset(quality, split == TRUE)
+quality_test = subset(quality, split == FALSE)
+nrow(quality_train)
+qualitylog = glm(PoorCare ~ OfficeVisits + Narcotics, data = quality_train, family = binomial)
+summary(qualitylog)
+predict_train = predict(qualitylog, type = "response")
+summary(predict_train)
+tapply(predict_train, quality_train$PoorCare, mean)
+```
+
+
+```{r}
+ROCRpred = prediction(predict_train, quality_train$PoorCare)
+ROCRpred
+ROCRperf = performance(ROCRpred, "tpr", "fpr")
+str(ROCRperf)
+#Rocpref是通过predict得到的model， seq(0, 1, 0.1) 0 为下限， 1为上限， 0.1为频率。  
+plot(ROCRperf, colorize = TRUE, print.cutoffs.at=seq(0, 1, 0.1), text.adj = c(-0.2, 1.7))
+```
+
+

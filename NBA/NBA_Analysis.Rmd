@@ -1,0 +1,25 @@
+---
+title: "NBA_Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(effects)
+library(car)
+library(alr4)
+```
+
+```{r}
+NBA = read.csv("NBA_train.csv")
+str(NBA)
+table(NBA$W, NBA$Playoffs)
+NBA$PTSdiff = NBA$PTS - NBA$oppPTS
+plot(NBA$PTSdiff, NBA$W)
+```
+
+```{r}
+mdif = lm(W ~ PTSdiff, data = NBA)
+summary(mdif)
+pointsreg = lm(PTS ~ DRB +X2PA + X3PA + FTA + AST + ORB +  TOV + STL + BLK, data = NBA)
+
+```
